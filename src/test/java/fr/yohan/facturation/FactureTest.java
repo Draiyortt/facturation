@@ -1,7 +1,7 @@
 package fr.yohan.facturation;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+
 
 import org.junit.Test;
 
@@ -16,29 +16,30 @@ public class FactureTest{
         Produit p1 = new Produit(1, "Vaisseau Star Wars", 100, 0.20);
         Facture f = new Facture(1, "10/12/2020", c);
         LigneFacture l = new LigneFacture(1);
-        boolean produitTrouvé = false;
+        boolean produitTrouve = false;
 
         // AGIS
 
         f.ajouterProduit(p1, l);
-        for (int i=0; i> f.getListProduits().size(); i++) {
+        for (int i=0; i< f.getListProduits().size(); i++) {
             if (f.getListProduits().get(i).getNomProduit().equals("Vaisseau Star Wars")) {
                 if ( f.getListQuantites().get(i).getQuantite()== 1){
-                produitTrouvé = true;
+                produitTrouve = true;
+                break;
                 }
             }
-            produitTrouvé = false;
+            produitTrouve = false;
              
         }
         
 
         // ASSERT
 
-        assertEquals("Produit :", true,  produitTrouvé);
+        assertEquals("Produit :", true,  produitTrouve);
     }
 
     @Test
-    public void ListeDeProduitsHorsTaxesSansQauntite_CalculPrixTotalHT_renvoie105() {
+    public void ListeDeProduitsHorsTaxesSansQauntite_CalculPrixTotalHT_renvoie220() {
 
         // ARRANGE
 
@@ -58,11 +59,11 @@ public class FactureTest{
 
         // ASSERT
 
-        assertEquals("Devrait renvoyer le prix :", 105, res);
+        assertEquals("Devrait renvoyer le prix :", 220, res);
     }
 
     @Test
-    public void ListeDeProduitsSansQauntite_CalculPrixTotalTTT_renvoie125() {
+    public void ListeDeProduitsSansQauntite_CalculPrixTotalTTT_renvoie260() {
 
         // ARRANGE
 
@@ -82,6 +83,40 @@ public class FactureTest{
 
         // ASSERT
 
-        assertEquals("Devrait renvoyer le prix :", 125, res);
+        assertEquals("Devrait renvoyer le prix :", 260, res);
+    }
+
+    @Test
+    public void retraitD1ProduitDansUneFacture_retireProduit_renvoieUnProduit() {
+
+        // ARRANGE
+
+        Client c = new Client("yohan.carvalho@ltpdampierre.fr");
+        Produit p1 = new Produit(1, "Vaisseau Star Wars", 100, 0.20);
+        Produit p2 = new Produit(1, "Boite De Coockies XL", 5, 0.10);
+        Facture f = new Facture(1, "10/12/2020", c);
+        LigneFacture l1 = new LigneFacture(2);
+        LigneFacture l2 = new LigneFacture(4);
+        f.ajouterProduit(p1, l1);
+        f.ajouterProduit(p2, l2);
+        boolean produitTrouve = true;
+
+        // AGIS
+
+        f.retirerProduit(p2, l2);
+        for (int i=0; i< f.getListProduits().size(); i++) {
+            if (f.getListProduits().get(i).getNomProduit().equals("Boite De Coockies XL")) {
+                produitTrouve = false;
+                break;
+            }
+            
+            produitTrouve = true;
+             
+        }
+        
+
+        // ASSERT
+
+        assertEquals("le produit à disparue", true,  produitTrouve);
     }
 }

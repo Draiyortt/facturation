@@ -44,16 +44,17 @@ public class Facture {
         return prixTotalTTC;
     }
 
-    public boolean ajouterProduit(Produit nouvProduit, LigneFacture quantite){
-        if (quantite.getQuantite() >0){
+    public boolean ajouterProduit(Produit nouvProduit, LigneFacture nouvQuantite){
+        if (nouvQuantite.getQuantite() >0){
             for (int i =0; i< produits.size(); i++) {
         
                 if (nouvProduit.equals(produits.get(i))) {
-                    this.quantite.get(i).setQuantite(quantite.getQuantite()+this.quantite.get(i).getQuantite());
+                    quantite.get(i).setQuantite(nouvQuantite.getQuantite()+quantite.get(i).getQuantite());
                     return true;
                 }
             }
             produits.add(nouvProduit);
+            quantite.add(nouvQuantite);
             return true;
         } else {
             return false;
@@ -68,7 +69,10 @@ public class Facture {
         
                 if (produitDemande.equals(produits.get(i))) {
                     this.quantite.get(i).setQuantite(quantite.getQuantite()-this.quantite.get(i).getQuantite());
-                    return true;
+                    if(this.quantite.get(i).getQuantite()<=0){
+                        produits.remove(produitDemande);
+                    }
+                return true;
                 }
             }
             produits.remove(produitDemande);
